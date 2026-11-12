@@ -22,16 +22,22 @@
 
 ## 🎬 The situation
 
-<p align="center"><img src="assets/gifs/situation.gif" width="300" alt="Animation: checkov -d terraform"></p>
+<p align="center"><img src="assets/gifs/situation.gif" width="300" alt="A scanner flagging missing settings in a Terraform resource"></p>
 
-A colleague opened a pull request for Pollie's cloud resources: a bucket for uploads, a web server, a MySQL database and an IAM policy for the app. It is tidy, it passes `terraform validate`, `terraform plan` shows nine resources to add, and two reviewers have written "LGTM". If it were applied this afternoon:
+```text
+AUDIT - pull request "Pollie cloud resources"
+Contents    : an uploads bucket, a web server, a MySQL database, an IAM policy
+Checks run  : terraform validate: pass | terraform plan: 9 resources to add
+Reviews     : 2 x "LGTM"
+Auditor note: if applied this afternoon,
+  - every upload is readable by anyone on the internet
+  - the database accepts connections from the whole world,
+    with a password committed to the repository
+  - the server hands its credentials to anyone who can make it fetch a URL
+  - the app holds an IAM policy that allows every action on every resource
+```
 
-- every upload would be readable by anyone on the internet,
-- the database would accept connections from the whole world, with a password committed to the repository,
-- the server would hand its credentials to anyone who can make it fetch a URL,
-- and the app would hold an IAM policy that allows **every action on every resource** of the account.
-
-Nobody looked for these because, in infrastructure code, what is *missing* is invisible: no line says "don't encrypt". A scanner reads every resource and knows what a safe one looks like. Today you use one. Nothing is deployed and nothing costs money: this is about reading and fixing code before it becomes a bill or a breach.
+Nobody looked, because in infrastructure code what is *missing* is invisible: no line says "don't encrypt". A scanner reads every resource and knows what a safe one looks like. Nothing is deployed and nothing costs money. Today is about reading and fixing code before it becomes a bill or a breach.
 
 > [!IMPORTANT]
 > **Your mission**
